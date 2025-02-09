@@ -157,7 +157,7 @@ export default function Home() {
 										<Label>Année</Label>
 										<Select value={selectedYear.toString()} onValueChange={value => setSelectedYear(Number(value))}>
 											<SelectTrigger><SelectValue /></SelectTrigger>
-											<SelectContent>
+											<SelectContent className="bg-white">
 												{years.map(year => (
 													<SelectItem key={year} value={year.toString()}>{year}</SelectItem>
 												))}
@@ -168,7 +168,7 @@ export default function Home() {
 										<Label>Semestre</Label>
 										<Select value={selectedSemester.toString()} onValueChange={value => setSelectedSemester(Number(value))}>
 											<SelectTrigger><SelectValue /></SelectTrigger>
-											<SelectContent>
+											<SelectContent  className="bg-white">
 												{semesters.map(semester => (
 													<SelectItem key={semester} value={semester.toString()}>
 														Semestre {semester}
