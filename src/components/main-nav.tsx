@@ -4,8 +4,12 @@ import Link from "next/link"
 
 const routes = [
 	{
-		label: "Notes",
+		label: "Home",
 		href: "/"
+	},
+	{
+		label: "Notes",
+		href: "/mark"
 	},
 	{
 		label: "Agenda",
