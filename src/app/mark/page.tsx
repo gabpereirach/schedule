@@ -8,10 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2, Eye, EyeOff } from "lucide-react";
+import { nanoid } from 'nanoid';
 
 // Types définissant la structure des données
 type Grade = {
-	id: number;
+	id: string;
 	title: string;
 	grade: number;
 	year: number;
@@ -19,69 +20,78 @@ type Grade = {
 };
 
 type Subject = {
-	id: number;
+	id: string;
 	name: string;
 	grades: Grade[];
 	visible: boolean;
 };
 
 // Calcule la moyenne des notes
-// Retourne 0 si aucune note n'est présente
 const calculateAverage = (grades: Grade[]) =>
 	grades.length ? grades.reduce((sum, grade) => sum + grade.grade, 0) / grades.length : 0;
 
 // Années et semestres disponibles pour le filtrage
-const years = [2024, 2023, 2022, 2021];
-const semesters = [1, 2];
+const years = [2025, 2024, 2023, 2022, 2021];
+const semesters = [1, 2, 3];
 
 export default function Home() {
-	// État des matières avec des données initiales
+	// Données tests
 	const [subjects, setSubjects] = useState<Subject[]>([
 		{
-			id: 1,
+			id: "1",
 			name: "Mathématiques",
 			grades: [
-				{ id: 1, title: "Algèbre", grade: 5.5, year: 2024, semester: 1 },
-				{ id: 2, title: "Géométrie", grade: 3.5, year: 2024, semester: 1 },
+				{ id: "1", title: "Algèbre", grade: 5.5, year: 2025, semester: 1 },
+				{ id: "2", title: "Géométrie", grade: 3.5, year: 2024, semester: 1 },
+				{ id: "4", title: "Limits", grade: 5.5, year: 2024, semester: 1 },
 			],
 			visible: true,
 		},
 		{
-			id: 2,
+			id: "2",
 			name: "Physique",
 			grades: [
-				{ id: 3, title: "Mécanique", grade: 4, year: 2024, semester: 1 },
+				{ id: "3", title: "Mécanique", grade: 4, year: 2024, semester: 1 },
 			],
 			visible: true,
 		},
 	]);
 
 	// États pour le filtrage et l'ajout de données
-	const [selectedYear, setSelectedYear] = useState(2024);
+	const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 	const [selectedSemester, setSelectedSemester] = useState(1);
 	const [newSubject, setNewSubject] = useState({ name: "" });
 	const [newGrade, setNewGrade] = useState({ title: "", grade: "" });
 
-	// Ajoute une nouvelle matière à la liste
+	// Ajoute une matière 
 	const addSubject = () => {
 		if (!newSubject.name) return;
-		setSubjects(prev => [...prev, {
-			id: Date.now(),
+		const newSubjectData = {
+			id: nanoid(),
 			name: newSubject.name,
-			grades: [],
+			grades: [{
+				id: nanoid(),
+				title: newGrade.title,
+				grade: Number(newGrade.grade),
+				year: selectedYear,
+				semester: selectedSemester,
+			}], 
 			visible: true,
-		}]);
-		setNewSubject({ name: "" }); // Réinitialise le formulaire
+		};
+	
+		setSubjects(prev => [...prev, newSubjectData]);
+		setNewSubject({ name: "" });
+		setNewGrade({ title: "", grade: "" });
 	};
 
-	// Ajoute une nouvelle note à une matière
-	const addGrade = (subjectId: number) => {
+	// Ajoute une note 
+	const addGrade = (subjectId: string) => {
 		if (!newGrade.title || !newGrade.grade) return;
 		setSubjects(prev => prev.map(subject =>
 			subject.id === subjectId ? {
 				...subject,
 				grades: [...subject.grades, {
-					id: Date.now(),
+					id: nanoid(),
 					title: newGrade.title,
 					grade: Number(newGrade.grade),
 					year: selectedYear,
@@ -89,11 +99,11 @@ export default function Home() {
 				}]
 			} : subject
 		));
-		setNewGrade({ title: "", grade: "" }); // Réinitialise le formulaire
+		setNewGrade({ title: "", grade: "" });
 	};
 
-	// Supprime une note d'une matière
-	const deleteGrade = (subjectId: number, gradeId: number) => {
+	// Supprime une note 
+	const deleteGrade = (subjectId: string, gradeId: string) => {
 		setSubjects(prev => prev.map(subject =>
 			subject.id === subjectId ? {
 				...subject,
@@ -103,13 +113,13 @@ export default function Home() {
 	};
 
 	// Bascule la visibilité d'une matière
-	const toggleVisibility = (subjectId: number) => {
+	const toggleVisibility = (subjectId: string) => {
 		setSubjects(prev => prev.map(subject =>
 			subject.id === subjectId ? { ...subject, visible: !subject.visible } : subject
 		));
 	};
 
-	// Filtre les notes par année et semestre sélectionnés
+	// Filtre les notes par année et semestre
 	const filteredGrades = (grades: Grade[]) =>
 		grades.filter(grade => grade.year === selectedYear && grade.semester === selectedSemester);
 
@@ -121,14 +131,12 @@ export default function Home() {
 		<div className="p-8">
 			<div className="max-w-6xl mx-auto">
 				<h1 className="text-3xl font-bold text-center mb-8">Carnet de Notes</h1>
-
 				<div className="grid grid-cols-12 gap-6">
-					{/* Panneau latéral avec la liste des matières */}
+					{/* Box latéral avec la liste des matières */}
 					<div className="col-span-3">
 						<Card>
 							<CardHeader className="flex flex-row items-center justify-between space-y-0">
 								<CardTitle>Matières</CardTitle>
-								{/* Dialog pour ajouter une nouvelle matière */}
 								<Dialog>
 									<DialogTrigger asChild>
 										<Button variant="outline" size="icon"><Plus className="h-4 w-4" /></Button>
@@ -143,6 +151,23 @@ export default function Home() {
 												<Input
 													value={newSubject.name}
 													onChange={e => setNewSubject(prev => ({ ...prev, name: e.target.value }))}
+												/>
+											</div>
+											<div className="grid gap-2">
+												<Label>Titre</Label>
+												<Input
+													value={newGrade.title}
+													onChange={e => setNewGrade(prev => ({ ...prev, title: e.target.value }))}
+												/>
+											</div>
+											<div className="grid gap-2">
+												<Label>Note</Label>
+												<Input
+													type="number"
+													min="1"
+													max="6"
+													value={newGrade.grade}
+													onChange={e => setNewGrade(prev => ({ ...prev, grade: e.target.value }))}
 												/>
 											</div>
 											<Button onClick={addSubject}>Ajouter</Button>
@@ -171,14 +196,13 @@ export default function Home() {
 											<SelectContent className="bg-white">
 												{semesters.map(semester => (
 													<SelectItem key={semester} value={semester.toString()}>
-														Semestre {semester}
+														Semestre {semester != 3 ? `${semester}` : "d'été"}
 													</SelectItem>
 												))}
 											</SelectContent>
 										</Select>
 									</div>
 								</div>
-								{/* Liste des matières filtrées */}
 								{subjects.filter(hasGradesInPeriod).map(subject => (
 									<div key={subject.id} className="flex items-center justify-between py-2">
 										<div className="flex items-center gap-2">
@@ -220,7 +244,6 @@ export default function Home() {
 													<span className="font-semibold">
 														Moyenne: {formattedAverage}/6
 													</span>
-													{/* Dialog pour ajouter une nouvelle note */}
 													<Dialog>
 														<DialogTrigger asChild>
 															<Button variant="outline" size="icon">
@@ -255,7 +278,6 @@ export default function Home() {
 													</Dialog>
 												</div>
 											</CardHeader>
-											{/* Liste des notes de la matière */}
 											<CardContent>
 												<div className="space-y-2">
 													{periodGrades.map(grade => (
@@ -277,7 +299,8 @@ export default function Home() {
 											</CardContent>
 										</Card>
 									);
-								})}
+								})
+							}
 						</div>
 					</div>
 				</div>
