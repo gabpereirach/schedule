@@ -11,7 +11,7 @@ import { Plus, Trash2, Eye, EyeOff } from "lucide-react";
 
 // Types définissant la structure des données
 type Grade = {
-	id: string;
+	id: number;
 	title: string;
 	grade: number;
 	year: number;
@@ -19,7 +19,7 @@ type Grade = {
 };
 
 type Subject = {
-	id: string;
+	id: number;
 	name: string;
 	grades: Grade[];
 	visible: boolean;
@@ -38,19 +38,19 @@ export default function Home() {
 	// État des matières avec des données initiales
 	const [subjects, setSubjects] = useState<Subject[]>([
 		{
-			id: "math",
+			id: 1,
 			name: "Mathématiques",
 			grades: [
-				{ id: "m1", title: "Algèbre", grade: 5.5, year: 2024, semester: 1 },
-				{ id: "m2", title: "Géométrie", grade: 3.5, year: 2024, semester: 1 },
+				{ id: 1, title: "Algèbre", grade: 5.5, year: 2024, semester: 1 },
+				{ id: 2, title: "Géométrie", grade: 3.5, year: 2024, semester: 1 },
 			],
 			visible: true,
 		},
 		{
-			id: "physics",
+			id: 2,
 			name: "Physique",
 			grades: [
-				{ id: "p1", title: "Mécanique", grade: 4, year: 2024, semester: 1 },
+				{ id: 3, title: "Mécanique", grade: 4, year: 2024, semester: 1 },
 			],
 			visible: true,
 		},
@@ -66,7 +66,7 @@ export default function Home() {
 	const addSubject = () => {
 		if (!newSubject.name) return;
 		setSubjects(prev => [...prev, {
-			id: Date.now().toString(),
+			id: Date.now(),
 			name: newSubject.name,
 			grades: [],
 			visible: true,
@@ -75,13 +75,13 @@ export default function Home() {
 	};
 
 	// Ajoute une nouvelle note à une matière
-	const addGrade = (subjectId: string) => {
+	const addGrade = (subjectId: number) => {
 		if (!newGrade.title || !newGrade.grade) return;
 		setSubjects(prev => prev.map(subject =>
 			subject.id === subjectId ? {
 				...subject,
 				grades: [...subject.grades, {
-					id: Date.now().toString(),
+					id: Date.now(),
 					title: newGrade.title,
 					grade: Number(newGrade.grade),
 					year: selectedYear,
@@ -93,7 +93,7 @@ export default function Home() {
 	};
 
 	// Supprime une note d'une matière
-	const deleteGrade = (subjectId: string, gradeId: string) => {
+	const deleteGrade = (subjectId: number, gradeId: number) => {
 		setSubjects(prev => prev.map(subject =>
 			subject.id === subjectId ? {
 				...subject,
@@ -103,7 +103,7 @@ export default function Home() {
 	};
 
 	// Bascule la visibilité d'une matière
-	const toggleVisibility = (subjectId: string) => {
+	const toggleVisibility = (subjectId: number) => {
 		setSubjects(prev => prev.map(subject =>
 			subject.id === subjectId ? { ...subject, visible: !subject.visible } : subject
 		));
@@ -179,22 +179,20 @@ export default function Home() {
 									</div>
 								</div>
 								{/* Liste des matières filtrées */}
-								<div className="space-y-2">
-									{subjects.filter(hasGradesInPeriod).map(subject => (
-										<div key={subject.id} className="flex items-center justify-between py-2">
-											<div className="flex items-center gap-2">
-												<span>{subject.name}</span>
-											</div>
-											<Button
-												variant="ghost"
-												size="icon"
-												onClick={() => toggleVisibility(subject.id)}
-											>
-												{subject.visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
-											</Button>
+								{subjects.filter(hasGradesInPeriod).map(subject => (
+									<div key={subject.id} className="flex items-center justify-between py-2">
+										<div className="flex items-center gap-2">
+											<span>{subject.name}</span>
 										</div>
-									))}
-								</div>
+										<Button
+											variant="ghost"
+											size="icon"
+											onClick={() => toggleVisibility(subject.id)}
+										>
+											{subject.visible ? <Eye className="h-4 w-4" /> : <EyeOff className="h-4 w-4" />}
+										</Button>
+									</div>
+								))}
 							</CardContent>
 						</Card>
 					</div>
