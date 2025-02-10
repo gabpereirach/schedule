@@ -168,7 +168,7 @@ export default function Home() {
 										<Label>Semestre</Label>
 										<Select value={selectedSemester.toString()} onValueChange={value => setSelectedSemester(Number(value))}>
 											<SelectTrigger><SelectValue /></SelectTrigger>
-											<SelectContent  className="bg-white">
+											<SelectContent className="bg-white">
 												{semesters.map(semester => (
 													<SelectItem key={semester} value={semester.toString()}>
 														Semestre {semester}
