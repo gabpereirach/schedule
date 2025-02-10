@@ -170,7 +170,7 @@ export default function Home() {
 													onChange={e => setNewGrade(prev => ({ ...prev, grade: e.target.value }))}
 												/>
 											</div>
-											<Button onClick={addSubject}>Ajouter</Button>
+											<Button variant="outline" size="textButton" onClick={addSubject}>Ajouter</Button>
 										</div>
 									</DialogContent>
 								</Dialog>
@@ -273,7 +273,7 @@ export default function Home() {
 																		onChange={e => setNewGrade(prev => ({ ...prev, grade: e.target.value }))}
 																	/>
 																</div>
-																<Button onClick={() => addGrade(subject.id)}>Ajouter</Button>
+																<Button variant="outline" size="textButton" onClick={() => addGrade(subject.id)}>Ajouter</Button>
 															</div>
 														</DialogContent>
 													</Dialog>
