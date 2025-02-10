@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Plus, Trash2, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, Eye, EyeOff } from "lucide-react";
 import { nanoid } from 'nanoid';
 
 // Types définissant la structure des données
@@ -75,10 +75,10 @@ export default function Home() {
 				grade: Number(newGrade.grade),
 				year: selectedYear,
 				semester: selectedSemester,
-			}], 
+			}],
 			visible: true,
 		};
-	
+
 		setSubjects(prev => [...prev, newSubjectData]);
 		setNewSubject({ name: "" });
 		setNewGrade({ title: "", grade: "" });
@@ -244,6 +244,7 @@ export default function Home() {
 													<span className="font-semibold">
 														Moyenne: {formattedAverage}/6
 													</span>
+													<Pencil className="h-4 w-4" />
 													<Dialog>
 														<DialogTrigger asChild>
 															<Button variant="outline" size="icon">
@@ -282,9 +283,16 @@ export default function Home() {
 												<div className="space-y-2">
 													{periodGrades.map(grade => (
 														<div key={grade.id} className="flex items-center justify-between py-2 border-b">
-															<span>{grade.title}</span>
+															<span className="font-semibold">{grade.title}</span>
 															<div className="flex items-center gap-4">
 																<span className="font-semibold">{grade.grade}/6</span>
+																<span>{grade.year}</span>
+																<Button
+																	variant="ghost"
+																	size="icon"
+																>
+																	<Pencil className="h-4 w-4" />
+																</Button>
 																<Button
 																	variant="ghost"
 																	size="icon"
