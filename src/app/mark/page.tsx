@@ -87,20 +87,37 @@ export default function Home() {
 	// Ajoute une note 
 	const addGrade = (subjectId: string) => {
 		if (!newGrade.title || !newGrade.grade) return;
-		setSubjects(prev => prev.map(subject =>
-			subject.id === subjectId ? {
-				...subject,
-				grades: [...subject.grades, {
-					id: nanoid(),
-					title: newGrade.title,
-					grade: Number(newGrade.grade),
-					year: selectedYear,
-					semester: selectedSemester,
-				}]
-			} : subject
-		));
+		setSubjects(prev => prev.map(subject => subject.id === subjectId ? {
+			...subject,
+			grades: [...subject.grades, {
+				id: nanoid(),
+				title: newGrade.title,
+				grade: Number(newGrade.grade),
+				year: selectedYear,
+				semester: selectedSemester,
+			}]
+		} : subject));
 		setNewGrade({ title: "", grade: "" });
 	};
+
+	// Modifie une matière 
+	const updateSubject = (subjectId: string, newName: string) => {
+		setSubjects(prev => prev.map(subject => subject.id === subjectId ? { 
+			...subject, 
+			name: newName 
+		}: subject));
+		setNewSubject({ name: "" });
+	}
+/*
+	// Modifie une matière 
+	const updateGrade = (gradeId: string, newTitle: string, newGrade: number) => {
+		setGrades(prev => prev.map(grade => grade.id === gradeId ? {
+			...grade, 
+			title: newTitle, 
+			grade: newGrade,
+		} : grade ));
+		setNewGrade({ title: "", grade: "" });
+	}*/
 
 	// Supprime une note 
 	const deleteGrade = (subjectId: string, gradeId: string) => {
@@ -114,9 +131,10 @@ export default function Home() {
 
 	// Bascule la visibilité d'une matière
 	const toggleVisibility = (subjectId: string) => {
-		setSubjects(prev => prev.map(subject =>
-			subject.id === subjectId ? { ...subject, visible: !subject.visible } : subject
-		));
+		setSubjects(prev => prev.map(subject => subject.id === subjectId ? { 
+			...subject, 
+			visible: !subject.visible 
+		} : subject ));
 	};
 
 	// Filtre les notes par année et semestre
@@ -244,7 +262,28 @@ export default function Home() {
 													<span className="font-semibold">
 														Moyenne: {formattedAverage}/6
 													</span>
-													<Pencil className="h-4 w-4" />
+													<Dialog>
+														<DialogTrigger asChild>
+															<Button>
+																<Pencil className="h-4 w-4" />
+															</Button>
+														</DialogTrigger>
+														<DialogContent>
+															<DialogHeader>
+																<DialogTitle>Modifier la matière</DialogTitle>
+															</DialogHeader>
+															<div className="grid gap-4 py-4">
+																<div className="grid gap-2">
+																	<Label>Matière</Label>
+																	<Input
+																		value={newSubject.name || subject.name}
+																		onChange={e => setNewSubject(prev => ({ ...prev, name: e.target.value }))}
+																	/>
+																</div>
+																<Button variant="outline" size="textButton" onClick={() => updateSubject(subject.id, newSubject.name)}>Modifier</Button>
+															</div>
+														</DialogContent>
+													</Dialog>
 													<Dialog>
 														<DialogTrigger asChild>
 															<Button variant="outline" size="icon">
