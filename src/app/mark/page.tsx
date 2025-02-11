@@ -108,16 +108,19 @@ export default function Home() {
 		}: subject));
 		setNewSubject({ name: "" });
 	}
-/*
+
 	// Modifie une matière 
 	const updateGrade = (gradeId: string, newTitle: string, newGrade: number) => {
-		setGrades(prev => prev.map(grade => grade.id === gradeId ? {
-			...grade, 
-			title: newTitle, 
-			grade: newGrade,
-		} : grade ));
+		setSubjects(prev => prev.map(subject => ({
+			...subject,
+			grades: subject.grades.map(grade => grade.id === gradeId ? { 
+				...grade, 
+				title: newTitle, 
+				grade: newGrade 
+			} : grade )
+		})));
 		setNewGrade({ title: "", grade: "" });
-	}*/
+	};
 
 	// Supprime une note 
 	const deleteGrade = (subjectId: string, gradeId: string) => {
@@ -326,12 +329,33 @@ export default function Home() {
 															<div className="flex items-center gap-4">
 																<span className="font-semibold">{grade.grade}/6</span>
 																<span>{grade.year}</span>
-																<Button
-																	variant="ghost"
-																	size="icon"
-																>
-																	<Pencil className="h-4 w-4" />
-																</Button>
+																<Dialog>
+																	<DialogTrigger asChild>
+																		<Button>
+																			<Pencil className="h-4 w-4" />
+																		</Button>
+																	</DialogTrigger>
+																	<DialogContent>
+																		<DialogHeader>
+																			<DialogTitle>Modifier la note</DialogTitle>
+																		</DialogHeader>
+																		<div className="grid gap-4 py-4">
+																			<div className="grid gap-2">
+																				<Label>Titre</Label>
+																				<Input
+																					value={newGrade.title || grade.title}
+																					onChange={e => setNewGrade(prev => ({ ...prev, title: e.target.value }))}
+																				/>
+																				<Label>Note</Label>
+																				<Input
+																					value={newGrade.grade || grade.grade}
+																					onChange={e => setNewGrade(prev => ({ ...prev, grade: e.target.value }))}
+																				/>
+																			</div>
+																			<Button variant="outline" size="textButton" onClick={() => updateGrade(grade.id, newGrade.title, parseFloat(newGrade.grade))}>Modifier</Button>
+																		</div>
+																	</DialogContent>
+																</Dialog>
 																<Button
 																	variant="ghost"
 																	size="icon"
