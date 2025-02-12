@@ -1,11 +1,26 @@
 ## Schedule
 The goal is to create a customizable schedule based on individual needs. A section in the settings will be created to enable or disable features as needed. These features can always be reactivated.
 
-## First
+## Firstly
 - Grade report
 - Calendar schedule
+    - Meetings*
+    - Tasks
+    - Birthday
+    - Event*
+    - Reminder
 - Todo list
-- Sports program -> coach version
+- Shopping list*
+    - Food
+    - Other
+- Notes 
+
+## Secondary
+- Sports program -> coach version*
+- Plan meals*
+- Interface works for company*
+
+(*)Possibly notify or exchange with other people (not fix)
 
 ## Getting Started
 
