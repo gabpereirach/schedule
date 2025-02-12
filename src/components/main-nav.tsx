@@ -9,7 +9,7 @@ const routes = [
 	},
 	{
 		label: "Notes",
-		href: "/mark"
+		href: "/grade"
 	},
 	{
 		label: "Agenda",
